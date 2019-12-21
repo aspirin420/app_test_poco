@@ -1,5 +1,8 @@
 # -*- coding: utf-8 -*-
 
+from airtest.core.android.adb import *
+from airtest.core.api import connect_device, start_app
+
 
 class Data(object):
     """
@@ -7,3 +10,46 @@ class Data(object):
     """
 
     android_package = '**.android.debug'
+    iOS_package = '**.ios.debug'
+    device_type = ''
+
+
+def connect_android():
+    """
+    连接 Android 手机
+    :return: 是否连接设备并启动了 app
+    """
+
+    adb = ADB()
+    device_list = adb.devices()
+    if len(device_list) >= 1:
+        try:
+            androd_device = 'Android://127.0.0.1:5037/' + device_list[0][0]
+            connect_device(androd_device)
+            Data.device_type = 'android'
+            package_name = Data.android_package
+            start_app(package_name)
+            return True
+        except Exception as e:
+            print('连接 android 失败：', e)
+            return False
+    else:
+        return False
+
+
+def connect_iOS():
+    """
+    连接 iOS 手机
+    :return: 是否连接设备并启动了 app
+    """
+
+    try:
+        iOS_device = 'http://127.0.0.1:8100'
+        connect_device(iOS_device)
+        Data.device_type = 'iOS'
+        package_name = ''
+        start_app(package_name)
+        return True
+    except Exception as e:
+        print('连接 iOS 失败：', e)
+        return False

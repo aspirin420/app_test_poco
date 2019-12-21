@@ -4,13 +4,15 @@ import base64
 import unittest
 from airtest.core.api import home
 from poco.drivers.android.uiautomation import AndroidUiautomationPoco
+from poco.drivers.ios import iosPoco
 from airtest.core.android.adb import *
+from lib.utils import Data
 
 abs_dir = os.path.dirname(os.path.abspath(os.path.dirname(__file__)))
 sys.path.append(abs_dir)
 
 
-class AndroidAppCase(unittest.TestCase):
+class BaseAppCase(unittest.TestCase):
     """
     基类：整个用例执行前的操作以及公共的方法
     """
@@ -21,8 +23,11 @@ class AndroidAppCase(unittest.TestCase):
         整个用例执行的前置条件
         """
 
-        super(AndroidAppCase, cls).setUpClass()
-        cls.poco = AndroidUiautomationPoco()
+        super(BaseAppCase, cls).setUpClass()
+        if Data.device_type == 'android':
+            cls.poco = AndroidUiautomationPoco()
+        else:
+            cls.poco = iosPoco()
 
     def setUp(self):
         pass
@@ -35,6 +40,7 @@ class AndroidAppCase(unittest.TestCase):
         """
         整个用例执行的后置条件
         """
+
         home()
         print('tearDownClass!!!')
 
@@ -42,6 +48,7 @@ class AndroidAppCase(unittest.TestCase):
     def save_img(cls, img_name):
         """
         保存图片
+        保存的图片同时可用于展示在报告里
         :param img_name: 要保存的图片的名称
         """
 

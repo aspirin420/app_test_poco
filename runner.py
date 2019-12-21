@@ -4,25 +4,21 @@ import unittest
 from BeautifulReport import BeautifulReport
 from test_cases.market.test_market import TestCheckMarket
 from airtest.core.android.adb import *
-from airtest.core.api import connect_device, start_app
-from lib.utils import Data
+from lib.utils import connect_android, connect_iOS
 
 
 def run_case():
     """
-    执行代码前获取 device，并取第一个 device 进行测试
-    如果没有获取到 device，不做任何操作
+    做 iOS 还是 Android 测试可以根据 ./lib/utils 里面的方法进行判断
+    此处直接手动改代码处理，没有自动化，因为 iOS 自动化选择 device 比较麻烦
+    对于Android：
+        执行代码前获取 device，并取第一个 device 进行测试
+        如果没有获取到 device，打印日志
     """
 
-    adb = ADB()
-    device_list = adb.devices()
-    print(device_list)
-    if len(device_list) >= 1:
-        androd_device = 'Android://127.0.0.1:5037/' + device_list[0][0]
-        connect_device(androd_device)
-        package_name = Data.android_package
-        start_app(package_name)
-
+    is_connect_iOS = connect_iOS()
+    is_connect_android = connect_android()
+    if is_connect_android or is_connect_iOS:
         test_suite = suite()
         result = BeautifulReport(test_suite)
         test_date = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
@@ -31,7 +27,7 @@ def run_case():
                       log_path='report',
                       theme='theme_default')
     else:
-        print('！！！ 没有连接设备')
+        print('!!! 没有连接设备')
 
 
 def suite():
