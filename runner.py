@@ -2,7 +2,7 @@
 
 import unittest
 from BeautifulReport import BeautifulReport
-from test_cases.market.test_market import TestCheckMarket
+from test_cases.market.test_search import TestSearch
 from airtest.core.android.adb import *
 from lib.utils import connect_android, connect_iOS
 
@@ -18,13 +18,12 @@ def run_case():
 
     is_connect_iOS = connect_iOS()
     is_connect_android = connect_android()
-    if is_connect_android or is_connect_iOS:
+    if is_connect_iOS or is_connect_android:
         test_suite = suite()
         result = BeautifulReport(test_suite)
         test_date = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
         report_name = '测试报告'
         result.report(filename=report_name, description=report_name + test_date, report_dir='./report',
-                      log_path='report',
                       theme='theme_default')
     else:
         print('!!! 没有连接设备')
@@ -36,7 +35,8 @@ def suite():
     """
 
     test_suite = unittest.TestSuite()
-    test_suite.addTests([TestCheckMarket('test_check_market')])
+    test_suite.addTests([TestSearch('test_search')]) # 添加 testsuite 方法 1
+    # test_suite.addTest(unittest.makeSuite(TestSearch)) # 添加 testsuite 方法 2
     return test_suite
 
 

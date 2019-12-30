@@ -52,8 +52,9 @@ class BaseAppCase(unittest.TestCase):
         :param img_name: 要保存的图片的名称
         """
 
-        b64img, fmt = cls.poco.snapshot()
+        b64img, fmt = cls.poco.snapshot(300)
         img_path = abs_dir + '/img/{}-{}.png'.format(img_name, time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()))
-        with open(img_path, 'wb') as f:
-            f.write(base64.b64decode(b64img))
+        if b64img:
+            with open(img_path, 'wb') as f:
+                f.write(base64.b64decode(b64img))
         print("<img src='" + img_path + "' width=600 />")  # 把图片发送到 BR 报告里，BR 的特性

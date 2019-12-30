@@ -10,7 +10,7 @@ class Data(object):
     """
 
     android_package = '**.android.debug'
-    iOS_package = '**.ios.debug'
+    iOS_package = 'com.apple.calculator'
     device_type = ''
 
 
@@ -27,8 +27,7 @@ def connect_android():
             androd_device = 'Android://127.0.0.1:5037/' + device_list[0][0]
             connect_device(androd_device)
             Data.device_type = 'android'
-            package_name = Data.android_package
-            start_app(package_name)
+            start_app(Data.android_package)
             return True
         except Exception as e:
             print('连接 android 失败：', e)
@@ -44,11 +43,10 @@ def connect_iOS():
     """
 
     try:
-        iOS_device = 'http://127.0.0.1:8100'
+        iOS_device = 'IOS:http://127.0.0.1:8100'
         connect_device(iOS_device)
         Data.device_type = 'iOS'
-        package_name = ''
-        start_app(package_name)
+        start_app(Data.iOS_package)
         return True
     except Exception as e:
         print('连接 iOS 失败：', e)
